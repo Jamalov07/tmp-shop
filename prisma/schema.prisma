@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum ActionMethodEnum {
+  get     @map("get")
+  put     @map("put")
+  post    @map("post")
+  patch   @map("patch")
+  delete  @map("delete")
+
+  @@map("action_method")
+}
+
+enum OrderStatusEnum {
+  pending   @map("pending")
+  accepted  @map("accepted")
+
+  @@map("order_status")
+}
+
+
+model ActionModel {
+  id           String            @map("id")           @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
+  url          String            @map("url")          @db.VarChar()
+  name         String            @map("name")         @db.VarChar()
+  method       ActionMethodEnum  
+  description  String            @map("description")  @db.VarChar()  @default("")
+  roleId       String?           @map("role_id")      @db.Uuid
+
+  role  RoleModel?  @relation(fields: [ roleId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  
+  staffs  StaffModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ url, name, method ])
+  @@map("action")
+}
+
+model RoleModel {
+  id         String    @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       String    @map("name")        @db.VarChar()
+  createdAt  DateTime  @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+
+  actions   ActionModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("role")
+}
+
+
+model StaffModel {
+  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  fullname   String     @map("fullname")    @db.VarChar()
+  password   String     @map("password")    @db.VarChar()  
+  token      String?    @map("token")       @db.VarChar()  
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  actions   ActionModel[]
+  payments  StaffPaymentModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("staff")
+}
+
+model StaffPaymentModel {
+  id          String   @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  sum         BigInt   @map("sum")         @db.BigInt       @default(0)
+  decription  String   @map("decription")  @db.VarChar()  
+  staffId     String   @map("staff_id")    @db.Uuid
+
+  staff  StaffModel  @relation(fields: [ staffId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("staff_payment")
+}
+
+model ClientModel {
+  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  fullname   String     @map("fullname")    @db.VarChar()
+  balance    BigInt     @map("balance")     @db.BigInt       @default(0)
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  payments  ClientPaymentModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("client")
+}
+
+model ClientPaymentModel {
+  id          String   @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  cash        BigInt   @map("cash")        @db.BigInt       @default(0)
+  card        BigInt   @map("card")        @db.BigInt       @default(0)
+  other       BigInt   @map("other")       @db.BigInt       @default(0)
+  transfer    BigInt   @map("transfer")    @db.BigInt       @default(0)
+  decription  String   @map("decription")  @db.VarChar()
+  clientId    String   @map("client_id")   @db.Uuid
+
+  client  ClientModel  @relation(fields: [ clientId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("client_payment")
+}
+
+
+model SupplierModel {
+  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  fullname   String     @map("fullname")    @db.VarChar()
+  balance    BigInt     @map("balance")     @db.BigInt       @default(0)
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  payments  SupplierPaymentModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("supplier")
+}
+
+model SupplierPaymentModel {
+  id          String   @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  cash        BigInt   @map("cash")        @db.BigInt       @default(0)
+  card        BigInt   @map("card")        @db.BigInt       @default(0)
+  other       BigInt   @map("other")       @db.BigInt       @default(0)
+  transfer    BigInt   @map("transfer")    @db.BigInt       @default(0)
+  decription  String   @map("decription")  @db.VarChar()
+  supplierId  String   @map("supplier_id") @db.Uuid
+
+  supplier  SupplierModel  @relation(fields: [ supplierId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("supplier_payment")
+}
+
+model ProductModel {
+  id         String    @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       String    @map("name")        @db.VarChar()
+  cost       BigInt    @map("cost")        @db.BigInt       @default(0)
+  price      BigInt    @map("price")       @db.BigInt       @default(0)
+  minAmount  Int       @map("min_amount")  @db.Integer      @default(1)
+  count      Int       @map("count")       @db.Integer      @default(1)
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("product")
+}
+
+model OrderModel {
+  id         String           @map("id")            @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
+  clientId   String           @map("client_id")     @db.Uuid
+  saleDate   DateTime         @map("sale_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
+  status     OrderStatusEnum  @map("order_status")
+
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("order")
+}
+
+model OrderProductModel {
+  id         String  @map("id")          @db.Uuid     @default(dbgenerated("GEN_RANDOM_UUID()"))
+  price      BigInt  @map("price")       @db.BigInt   @default(0)
+  count      Int     @map("count")       @db.Integer  @default(1)
+  productId  String  @map("product_id")  @db.Uuid
+  
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("order_product")
+}
+
+
+
+

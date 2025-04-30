@@ -1,0 +1,6 @@
+export * from './partner.controller'
+export * from './partner.module'
+export * from './partner.repository'
+export * from './partner.service'
+export * from './dtos'
+export * from './interfaces'
