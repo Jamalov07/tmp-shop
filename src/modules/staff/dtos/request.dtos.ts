@@ -1,31 +1,22 @@
-import { PickType, IntersectionType, ApiProperty } from '@nestjs/swagger'
+import { PickType, IntersectionType } from '@nestjs/swagger'
 import { StaffCreateOneRequest, StaffDeleteOneRequest, StaffFindManyRequest, StaffFindOneRequest, StaffUpdateOneRequest } from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { StaffOptionalDto, StaffRequiredDto } from './fields.dtos'
-import { $Enums, StaffRoleEnum } from '@prisma/client'
-import { IsArray, IsEnum, IsOptional } from 'class-validator'
 
 export class StaffFindManyRequestDto
 	extends IntersectionType(PickType(StaffOptionalDto, ['fullname', 'phone']), PaginationRequestDto, PickType(RequestOtherFieldsDto, ['search']))
-	implements StaffFindManyRequest
-{
-	@ApiProperty({ enum: StaffRoleEnum, isArray: true })
-	@IsOptional()
-	@IsArray()
-	@IsEnum(StaffRoleEnum, { each: true })
-	roleNames?: $Enums.StaffRoleEnum[]
-}
+	implements StaffFindManyRequest {}
 
 export class StaffFindOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id'])) implements StaffFindOneRequest {}
 
 export class StaffCreateOneRequestDto
-	extends IntersectionType(PickType(StaffRequiredDto, ['fullname', 'phone', 'password']), PickType(RequestOtherFieldsDto, ['actionsToConnect', 'rolesToConnect']))
+	extends IntersectionType(PickType(StaffRequiredDto, ['fullname', 'phone', 'password']), PickType(RequestOtherFieldsDto, ['actionsToConnect']))
 	implements StaffCreateOneRequest {}
 
 export class StaffUpdateOneRequestDto
 	extends IntersectionType(
 		PickType(StaffOptionalDto, ['deletedAt', 'fullname', 'password', 'phone', 'token']),
-		PickType(RequestOtherFieldsDto, ['actionsToConnect', 'actionsToDisconnect', 'rolesToConnect', 'rolesToDisconnect']),
+		PickType(RequestOtherFieldsDto, ['actionsToConnect', 'actionsToDisconnect']),
 	)
 	implements StaffUpdateOneRequest {}
 

@@ -1,12 +1,12 @@
 import { PaginationRequest, RequestOtherFields } from '../../../common'
-import { ActionOptional } from './fields.interfaces'
+import { ActionOptional, ActionRequired } from './fields.interfaces'
 
-export declare interface ActionFindManyRequest extends Pick<ActionOptional, 'name' | 'url' | 'method' | 'description'>, PaginationRequest, Pick<RequestOtherFields, 'ids'> {}
+export declare interface ActionFindManyRequest extends Pick<ActionOptional, 'name' | 'url' | 'method' | 'description' | 'roleId'>, PaginationRequest {}
 
-export declare interface ActionFindOneRequest extends Pick<ActionOptional, 'id' | 'description' | 'name' | 'method' | 'url'> {}
+export declare interface ActionFindOneRequest extends Pick<ActionRequired, 'id'> {}
 
-export declare interface ActionGetManyRequest extends Pick<ActionOptional, 'name' | 'url' | 'method' | 'description'>, PaginationRequest, Pick<RequestOtherFields, 'ids'> {}
+export declare interface ActionGetManyRequest extends ActionOptional, PaginationRequest, Pick<RequestOtherFields, 'ids'> {}
 
-export declare interface ActionGetOneRequest extends Pick<ActionOptional, 'id' | 'description' | 'name' | 'method' | 'url'> {}
+export declare interface ActionGetOneRequest extends ActionOptional {}
 
-export declare interface ActionUpdateOneRequest extends Pick<ActionOptional, 'description'> {}
+export declare interface ActionUpdateOneRequest extends Pick<ActionOptional, 'description' | 'roleId'> {}

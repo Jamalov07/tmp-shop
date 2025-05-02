@@ -1,16 +1,20 @@
 import { GlobalResponse } from '@common'
-import { PartnerOptional, PartnerRequired } from '../../partner'
+import { StaffOptional, StaffRequired } from '../../staff'
 
-export declare interface UserSignInRequest extends Pick<PartnerRequired, 'password' | 'phone'> {}
+export declare interface StaffSignInRequest extends Pick<StaffRequired, 'password' | 'phone'> {}
 
 export declare interface AuthModifyResponse extends GlobalResponse {
 	data: null
 }
 
 export declare interface AuthSignOutRequest {
-	user: PartnerOptional
+	user: StaffOptional
+}
+
+export declare interface AuthGetStaffProfile {
+	user: StaffOptional
 }
 
 export declare interface AuthGetValidTokensRequest {
-	user: PartnerOptional
+	user: StaffOptional
 }

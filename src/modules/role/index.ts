@@ -1,5 +1,0 @@
-export * from './role.module'
-export * from './partner-role'
-export * from './staff-role'
-export * from './dtos'
-export * from './interfaces'

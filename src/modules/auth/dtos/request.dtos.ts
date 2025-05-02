@@ -1,5 +1,5 @@
 import { IntersectionType, PickType } from '@nestjs/swagger'
-import { PartnerRequiredDto } from '../../partner'
-import { PartnerSignInRequest } from '../partner-auth'
+import { StaffSignInRequest } from '../interfaces'
+import { StaffRequiredDto } from '../../staff'
 
-export class UserSignInRequestDto extends IntersectionType(PickType(PartnerRequiredDto, ['password', 'phone'])) implements PartnerSignInRequest {}
+export class StaffSignInRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['password', 'phone'])) implements StaffSignInRequest {}

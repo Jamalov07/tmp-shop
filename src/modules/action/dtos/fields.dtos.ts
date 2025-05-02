@@ -2,7 +2,7 @@ import { $Enums, ActionMethodEnum } from '@prisma/client'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '../../../common'
 import { ActionOptional, ActionRequired } from '../interfaces'
 import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger'
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 
 export class ActionRequiredDto extends PickType(DefaultRequiredFieldsDto, ['id']) implements ActionRequired {
 	@ApiProperty({ type: String })
@@ -24,6 +24,11 @@ export class ActionRequiredDto extends PickType(DefaultRequiredFieldsDto, ['id']
 	@IsNotEmpty()
 	@IsString()
 	description: string
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsUUID('4')
+	roleId: string
 }
 
 export class ActionOptionalDto extends PickType(DefaultOptionalFieldsDto, ['id']) implements ActionOptional {
@@ -46,4 +51,9 @@ export class ActionOptionalDto extends PickType(DefaultOptionalFieldsDto, ['id']
 	@IsOptional()
 	@IsString()
 	description?: string = ''
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsUUID('4')
+	roleId?: string
 }

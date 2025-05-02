@@ -1,6 +1,0 @@
-export * from './model.controller'
-export * from './model.module'
-export * from './model.repository'
-export * from './model.service'
-export * from './dtos'
-export * from './interfaces'

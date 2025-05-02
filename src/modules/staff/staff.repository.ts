@@ -27,7 +27,6 @@ export class StaffRepository implements OnModuleInit {
 		const staffs = await this.prisma.staffModel.findMany({
 			where: {
 				fullname: query.fullname,
-				roles: { some: { name: { in: query.roleNames } } },
 				OR: [{ fullname: { contains: query.search, mode: 'insensitive' } }, { phone: { contains: query.search, mode: 'insensitive' } }],
 			},
 			select: {
@@ -35,7 +34,6 @@ export class StaffRepository implements OnModuleInit {
 				fullname: true,
 				phone: true,
 				actions: true,
-				roles: true,
 				updatedAt: true,
 				createdAt: true,
 				deletedAt: true,
@@ -54,7 +52,6 @@ export class StaffRepository implements OnModuleInit {
 				fullname: true,
 				phone: true,
 				actions: true,
-				roles: true,
 				updatedAt: true,
 				createdAt: true,
 				deletedAt: true,
@@ -68,7 +65,6 @@ export class StaffRepository implements OnModuleInit {
 		const staffsCount = await this.prisma.staffModel.count({
 			where: {
 				fullname: query.fullname,
-				roles: { some: { name: { in: query.roleNames } } },
 				OR: [{ fullname: { contains: query.search, mode: 'insensitive' } }, { phone: { contains: query.search, mode: 'insensitive' } }],
 			},
 		})
@@ -93,7 +89,7 @@ export class StaffRepository implements OnModuleInit {
 	async getOne(query: StaffGetOneRequest) {
 		const staff = await this.prisma.staffModel.findFirst({
 			where: { id: query.id, fullname: query.fullname, phone: query.phone },
-			select: { id: true, fullname: true, phone: true, createdAt: true, deletedAt: true, roles: true, password: true, token: true },
+			select: { id: true, fullname: true, phone: true, createdAt: true, deletedAt: true, password: true, token: true },
 		})
 
 		return staff
@@ -113,7 +109,6 @@ export class StaffRepository implements OnModuleInit {
 				fullname: body.fullname,
 				password: body.password,
 				phone: body.phone,
-				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
 		})
@@ -129,10 +124,6 @@ export class StaffRepository implements OnModuleInit {
 				phone: body.phone,
 				token: body.token,
 				deletedAt: body.deletedAt,
-				roles: {
-					connect: (body.rolesToConnect ?? []).map((r) => ({ id: r })),
-					disconnect: (body.rolesToDisconnect ?? []).map((r) => ({ id: r })),
-				},
 				actions: {
 					connect: (body.actionsToConnect ?? []).map((r) => ({ id: r })),
 					disconnect: (body.actionsToDisconnect ?? []).map((r) => ({ id: r })),

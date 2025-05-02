@@ -10,6 +10,7 @@ import {
 	StaffUpdateOneRequestDto,
 	StaffDeleteOneRequestDto,
 	StaffCreateOneRequestDto,
+	StaffCreateOneResponseDto,
 } from './dtos'
 
 @ApiTags('Staff')
@@ -37,8 +38,8 @@ export class StaffController {
 
 	@Post('one')
 	@ApiOperation({ summary: 'create one staff' })
-	@ApiOkResponse({ type: StaffModifyResponseDto })
-	async createOne(@Body() body: StaffCreateOneRequestDto): Promise<StaffModifyResponseDto> {
+	@ApiOkResponse({ type: StaffCreateOneResponseDto })
+	async createOne(@Body() body: StaffCreateOneRequestDto): Promise<StaffCreateOneResponseDto> {
 		return this.staffService.createOne(body)
 	}
 

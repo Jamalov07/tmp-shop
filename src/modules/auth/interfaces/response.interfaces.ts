@@ -1,12 +1,16 @@
 import { GlobalResponse } from '@common'
-import { PartnerOptional } from '../../partner'
-import { Tokens } from './tokens.interfaces'
+import { StaffOptional } from '../../staff'
 
-export declare interface PartnerSignInData {
-	user: PartnerOptional
+export declare interface Tokens {
+	accessToken: string
+	refreshToken: string
+}
+
+export declare interface StaffSignInData {
+	staff: StaffOptional
 	tokens: Tokens
 }
 
-export declare interface PartnerSignInResponse extends GlobalResponse {
-	data: PartnerSignInData
+export declare interface StaffSignInResponse extends GlobalResponse {
+	data: StaffSignInData
 }

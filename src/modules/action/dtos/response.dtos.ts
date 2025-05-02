@@ -3,7 +3,10 @@ import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } fro
 import { ActionFindManyData, ActionFindOneData, ActionFindOneResponse, ActionModifyResposne } from '../interfaces'
 import { ActionRequiredDto } from './fields.dtos'
 
-export class ActionFindOneDataDto extends PickType(ActionRequiredDto, ['id', 'url', 'name', 'method', 'description']) implements ActionFindOneData {}
+export class ActionFindOneDataDto extends PickType(ActionRequiredDto, ['id', 'url', 'name', 'method', 'description']) implements ActionFindOneData {
+	// @ApiProperty({ type: RoleFindOneDataDto })
+	// role: RoleFindOneData
+}
 
 export class ActionFindManyDataDto extends PaginationResponseDto implements ActionFindManyData {
 	@ApiProperty({ type: ActionFindOneDataDto, isArray: true })

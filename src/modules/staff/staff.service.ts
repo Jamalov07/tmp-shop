@@ -79,9 +79,9 @@ export class StaffService {
 
 		const password = await bcrypt.hash(body.password, 7)
 
-		await this.staffRepository.createOne({ ...body, password: password })
+		const staff = await this.staffRepository.createOne({ ...body, password: password })
 
-		return createResponse({ data: null, success: { messages: ['create one success'] } })
+		return createResponse({ data: staff, success: { messages: ['create one success'] } })
 	}
 
 	async updateOne(query: StaffGetOneRequest, body: StaffUpdateOneRequest) {

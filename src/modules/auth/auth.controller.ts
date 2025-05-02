@@ -1,10 +1,10 @@
-import { Body, Controller, Post, Req, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { AuthOptions, CRequest, RefreshTokenInterceptor } from '../../common'
-import { AuthModifyResponseDto, UserSignInRequestDto, UserSignInResponseDto } from './dtos'
+import { AuthModifyResponseDto, StaffSignInRequestDto, StaffSignInResponseDto } from './dtos'
+import { CRequest, AuthOptions, RefreshTokenInterceptor } from '@common'
+import { StaffFindOneResponseDto } from '../staff'
 
-@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 	private readonly authService: AuthService
@@ -12,16 +12,23 @@ export class AuthController {
 		this.authService = authService
 	}
 
+	@Get('profile')
+	@ApiOperation({ summary: 'staff profile' })
+	@ApiOkResponse({ type: StaffFindOneResponseDto })
+	async getStaffProfile(@Req() request: CRequest): Promise<StaffFindOneResponseDto> {
+		return this.authService.getStaffProfile({ user: request.user })
+	}
+
 	@Post('sign-in')
-	@ApiOperation({ summary: 'sign in user' })
-	@ApiOkResponse({ type: UserSignInResponseDto })
-	async signIn(@Body() body: UserSignInRequestDto): Promise<UserSignInResponseDto> {
+	@ApiOperation({ summary: 'sign in staff' })
+	@ApiOkResponse({ type: StaffSignInResponseDto })
+	async signIn(@Body() body: StaffSignInRequestDto): Promise<StaffSignInResponseDto> {
 		return this.authService.signIn(body)
 	}
 
 	@Post('sign-out')
 	@AuthOptions(true, true)
-	@ApiOperation({ summary: 'sign out user' })
+	@ApiOperation({ summary: 'sign out staff' })
 	@ApiOkResponse({ type: AuthModifyResponseDto })
 	async signOut(@Req() request: CRequest): Promise<AuthModifyResponseDto> {
 		return this.authService.signOut({ user: request.user })
@@ -29,7 +36,7 @@ export class AuthController {
 
 	@Post('refresh-token')
 	@ApiOperation({ summary: 'refresh token' })
-	@ApiOkResponse({ type: UserSignInResponseDto })
+	@ApiOkResponse({ type: StaffSignInResponseDto })
 	@UseInterceptors(RefreshTokenInterceptor)
 	async getValidTokensWithRefresh(@Req() request: CRequest) {
 		return this.authService.getValidTokens({ user: request.user })
