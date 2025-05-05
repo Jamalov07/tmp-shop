@@ -20,4 +20,4 @@ export class StaffUpdateOneRequestDto
 	)
 	implements StaffUpdateOneRequest {}
 
-export class StaffDeleteOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id'])) implements StaffDeleteOneRequest {}
+export class StaffDeleteOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id']), PickType(RequestOtherFieldsDto, ['method'])) implements StaffDeleteOneRequest {}
