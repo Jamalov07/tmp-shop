@@ -1,6 +1,18 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { ActionModule, AuthModule, ClientModule, ClientPaymentModule, CronModule, ExcelModule, PrismaModule, RoleModule, StaffModule, StaffPaymentModule } from '@module'
+import {
+	ActionModule,
+	AuthModule,
+	ClientModule,
+	ClientPaymentModule,
+	CronModule,
+	ExcelModule,
+	PrismaModule,
+	RoleModule,
+	StaffModule,
+	StaffPaymentModule,
+	SupplierModule,
+} from '@module'
 import { appConfig, databaseConfig, jwtConfig } from '@config'
 import { AuthGuard, CheckPermissionGuard } from '@common'
 
@@ -16,6 +28,7 @@ import { AuthGuard, CheckPermissionGuard } from '@common'
 		StaffModule,
 		RoleModule,
 		ClientModule,
+		SupplierModule,
 		StaffPaymentModule,
 		ClientPaymentModule,
 		CronModule,
